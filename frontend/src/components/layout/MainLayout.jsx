@@ -3,6 +3,7 @@ import { Link, useLocation as useRouterLocation, Outlet, useNavigate } from 'rea
 import { useLocation } from '@/contexts/LocationContext';
 import { 
   LayoutDashboard, 
+  Target,
   Map, 
   Bell, 
   CloudRain, 
@@ -22,6 +23,7 @@ import {
   Heart,
   CheckCheck
 } from 'lucide-react';
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -319,7 +321,9 @@ const MainLayout = () => {
   // Base navigation items for all users (citizen)
   const baseNavItems = [
     { icon: LayoutDashboard, label: t('nav.dashboard'), path: '/app/dashboard' },
+    { icon: Target, label: t('nav.drishti'), path: '/app/drishti' },
     { icon: Map, label: t('nav.map'), path: '/app/map' },
+
     { icon: Bell, label: t('nav.alerts'), path: '/app/alerts' },
     { icon: CloudRain, label: t('nav.weather'), path: '/app/weather' },
     { icon: Flame, label: t('nav.disasters'), path: '/app/disasters' },
@@ -479,8 +483,8 @@ const MainLayout = () => {
         <div className="h-16 flex items-center px-4 border-b border-border justify-between">
           {!collapsed && (
             <div className="flex items-center gap-3 font-bold text-xl tracking-tight">
-              <img src="/main_logo.png" alt="Suraksha Setu" className="h-12 w-12 object-contain" />
-              <span className="text-primary">Suraksha<span className="text-foreground"> Setu</span></span>
+              <img src="/main_logo.png" alt="DrishtiSetu" className="h-12 w-12 object-contain" />
+              <span className="text-primary">Drishti<span className="text-foreground">Setu</span></span>
             </div>
           )}
           {collapsed && <img src="/main_logo.png" alt="Logo" className="h-12 w-12 object-contain mx-auto" />}

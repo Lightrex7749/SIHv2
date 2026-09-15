@@ -1,7 +1,7 @@
 {
-  "short_name": "Suraksha Setu",
-  "name": "Suraksha Setu - AI-Powered Disaster Management Platform",
-  "description": "Real-time disaster alerts, weather updates, and AI-powered safety guidance for India",
+  "short_name": "DrishtiSetu",
+  "name": "DrishtiSetu - AI-Driven GIS Disaster Relocation Decision-Support Platform",
+  "description": "AI-driven, GIS-enabled disaster relocation decision-support platform for multi-hazard habitations",
   "icons": [
     {
       "src": "favicon.ico",

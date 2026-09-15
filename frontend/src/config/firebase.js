@@ -23,37 +23,46 @@ const firebaseConfig = {
   measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
 };
 
-// Initialize Firebase
-let app;
-let analytics;
+const isConfigValid = !!(
+  firebaseConfig.apiKey &&
+  firebaseConfig.projectId &&
+  firebaseConfig.apiKey !== 'your-firebase-api-key' &&
+  firebaseConfig.projectId !== 'your-project-id'
+);
+
+// Initialize Firebase safely
+let app = null;
+let auth = null;
+let db = null;
+let analytics = null;
+let googleProvider = null;
 let initError = null;
 
-try {
-  app = initializeApp(firebaseConfig);
-  analytics = getAnalytics(app);
-  console.log('✅ Firebase initialized successfully');
-} catch (error) {
-  initError = error;
-  console.error('❌ Firebase initialization failed:', error.message);
-  console.error('Full error:', error);
+if (isConfigValid) {
+  try {
+    app = initializeApp(firebaseConfig);
+    auth = getAuth(app);
+    db = getFirestore(app);
+    googleProvider = new GoogleAuthProvider();
+    if (typeof window !== 'undefined' && firebaseConfig.measurementId) {
+      analytics = getAnalytics(app);
+    }
+    console.log('✅ Firebase initialized successfully');
+  } catch (error) {
+    initError = error;
+    console.warn('⚠️ Firebase initialization failed:', error.message);
+  }
+} else {
+  initError = new Error('Firebase configuration missing or default placeholders used in environment.');
+  console.warn('⚠️ Firebase is not configured. Authentication will run in local/demo mode.');
 }
 
-if (!app) {
-  throw new Error(
-    'Firebase initialization failed. Please check your Firebase configuration. ' +
-    'Ensure the project exists and credentials are correct in firebase.js'
-  );
-}
-
-// Initialize Firebase Authentication and get a reference to the service
-export const auth = getAuth(app);
-export const db = getFirestore(app);
-export const googleProvider = new GoogleAuthProvider();
-export { analytics };
+export { auth, db, analytics, googleProvider };
 export const isFirebaseConfigured = !!app && !initError;
 
 // Firestore helper: save user profile with phone number
 export const saveUserProfile = async (uid, profileData) => {
+  if (!db) return;
   try {
     await setDoc(doc(db, 'users', uid), profileData, { merge: true });
     console.log('User profile saved to Firestore');
@@ -65,6 +74,7 @@ export const saveUserProfile = async (uid, profileData) => {
 
 // Firestore helper: get user profile
 export const getUserProfile = async (uid) => {
+  if (!db) return null;
   try {
     const docSnap = await getDoc(doc(db, 'users', uid));
     return docSnap.exists() ? docSnap.data() : null;
@@ -76,6 +86,7 @@ export const getUserProfile = async (uid) => {
 
 // Authentication functions
 export const registerWithEmail = async (email, password, displayName) => {
+  if (!auth) throw new Error('Firebase Auth is not configured.');
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     
@@ -94,6 +105,7 @@ export const registerWithEmail = async (email, password, displayName) => {
 };
 
 export const loginWithEmail = async (email, password) => {
+  if (!auth) throw new Error('Firebase Auth is not configured.');
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     return userCredential.user;
@@ -104,6 +116,7 @@ export const loginWithEmail = async (email, password) => {
 };
 
 export const loginWithGoogle = async () => {
+  if (!auth || !googleProvider) throw new Error('Firebase Google Auth is not configured.');
   try {
     const result = await signInWithPopup(auth, googleProvider);
     return result.user;
@@ -114,6 +127,7 @@ export const loginWithGoogle = async () => {
 };
 
 export const logout = async () => {
+  if (!auth) return;
   try {
     await signOut(auth);
   } catch (error) {
@@ -123,6 +137,7 @@ export const logout = async () => {
 };
 
 export const resetPassword = async (email) => {
+  if (!auth) throw new Error('Firebase Auth is not configured.');
   try {
     await sendPasswordResetEmail(auth, email);
   } catch (error) {
@@ -132,3 +147,4 @@ export const resetPassword = async (email) => {
 };
 
 export default app;
+

@@ -75,7 +75,7 @@ const Landing = () => {
             <div className="bg-white border border-slate-200 p-3 rounded-xl shadow-sm">
               <img src="/main_logo.png" alt="Logo" className="w-10 h-10 object-contain" />
             </div>
-            <span className="text-2xl font-semibold tracking-tight">Suraksha Setu</span>
+            <span className="text-2xl font-semibold tracking-tight">DrishtiSetu</span>
           </div>
           <div className="flex items-center gap-3">
             <button
@@ -103,17 +103,17 @@ const Landing = () => {
               className="text-xl md:text-2xl text-slate-600"
               style={{ fontFamily: "'Playfair Display', 'Times New Roman', serif", fontStyle: 'italic' }}
             >
-              A calm, premium way to deliver life-saving intelligence.
+              AI-driven GIS disaster relocation decision-support platform.
             </p>
             <div className="space-y-5">
               <h1 className="text-5xl md:text-6xl font-semibold tracking-tight">
-                Unified disaster alerts,
+                DrishtiSetu:
                 <br />
-                built for every Indian.
+                Multi-Hazard Relocation Intelligence.
               </h1>
               <p className="text-lg md:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
-                Suraksha Setu transforms complex data into clear, localized guidance with
-                multilingual support, PIN-code precision, and research-ready insights.
+                DrishtiSetu transforms complex satellite, terrain, and climate data into explainable relocation decisions with
+                deterministic carrying capacity guardrails, multi-hazard scoring, and auditable governance.
               </p>
             </div>
             <div className="flex gap-4 justify-center flex-wrap">

@@ -1,0 +1,7 @@
+scikit-learn>=1.4
+fastapi>=0.110
+uvicorn>=0.29
+pydantic>=2.6
+# Optional, only needed for generation.generator.generate_llm() (the pluggable
+# LLM-backed generation path, off by default — see generation/generator.py):
+# anthropic>=0.25

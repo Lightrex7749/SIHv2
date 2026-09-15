@@ -5,7 +5,9 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 const baseTranslation = {
   // Navigation
   'nav.dashboard': 'Dashboard',
+  'nav.drishti': 'Relocation DSS',
   'nav.alerts': 'Alerts',
+
   'nav.weather': 'Weather',
   'nav.disasters': 'Disasters',
   'nav.map': 'Map',
@@ -25,7 +27,7 @@ const baseTranslation = {
   'role.user': 'User',
 
   // Dashboard
-  'dashboard.welcome': 'Welcome to Suraksha Setu',
+  'dashboard.welcome': 'Welcome to DrishtiSetu',
   'dashboard.commandCenter': 'Command Center',
   'dashboard.commandSubtitle': 'Live disaster management and safety monitoring dashboard',
   'dashboard.liveOverview': 'Live operations overview',
@@ -39,7 +41,7 @@ const baseTranslation = {
   'dashboard.readinessScore': 'Readiness Score',
   'dashboard.alertsChannel': 'Alerts Channel',
   'dashboard.active': 'Active',
-  'dashboard.safetyScore': 'Suraksha Score',
+  'dashboard.safetyScore': 'Drishti Safety Score',
   'dashboard.weatherSummary': 'Weather Summary',
   'dashboard.activeAlerts': 'Active Alerts',
   'dashboard.impactStats': 'Impact Statistics',

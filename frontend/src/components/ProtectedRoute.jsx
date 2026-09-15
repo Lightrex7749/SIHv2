@@ -4,7 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import AppLoadingScreen from '@/components/ui/AppLoadingScreen';
 
 const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading, loginDemoUser } = useAuth();
   const location = useLocation();
 
   // Show loading spinner while checking authentication
@@ -12,8 +12,12 @@ const ProtectedRoute = ({ children }) => {
     return <AppLoadingScreen />;
   }
 
-  // Redirect to login if not authenticated
+  // Auto-login demo user for direct access if unauthenticated
   if (!isAuthenticated) {
+    if (loginDemoUser) {
+      loginDemoUser('admin');
+      return children;
+    }
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
@@ -22,3 +26,4 @@ const ProtectedRoute = ({ children }) => {
 };
 
 export default ProtectedRoute;
+

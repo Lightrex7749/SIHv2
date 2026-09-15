@@ -1,0 +1,29 @@
+[SECTION: Rationale and Legal Mandate]
+Section 11 of the Disaster Management Act, 2005 mandates that there shall be a National Disaster Management Plan (NDMP) for the whole of India. The NDMP complies with the National Policy on Disaster Management (NPDM) of 2009 and conforms to the provisions of the DM Act, making it mandatory for central ministries and departments to have adequate disaster management plans. The NDMP is implemented in a scalable manner across all phases of disaster management: mitigation (prevention and risk reduction), preparedness, response, and recovery (immediate restoration to long-term building back better).
+
+[SECTION: Main Pillars of the NDMP]
+The NDMP rests on five main pillars: (I) conforming to the national legal mandates — the DM Act 2005 and the National Policy on Disaster Management 2009; (II) participating proactively in global goals under agreements to which India is a signatory — the Sendai Framework for Disaster Risk Reduction, the Sustainable Development Goals, and the Paris Agreement on Climate Change; (III) the Prime Minister's Ten-Point Agenda for Disaster Risk Reduction; (IV) social inclusion as a cross-cutting principle; and (V) mainstreaming disaster risk reduction as an integral feature of development planning.
+
+[SECTION: Vision]
+The NDMP's vision is to make India disaster resilient across all sectors, achieve substantial and inclusive disaster risk reduction by building local capacities starting with the poor, and decrease significantly the loss of lives, livelihoods, and assets — economic, physical, social, cultural, and environmental — while enhancing the ability to cope with disasters at all levels of administration and among communities.
+
+[SECTION: Relocation as Part of Physical Rehabilitation]
+Under the Recovery and Building Back Better chapter, physical rehabilitation activities following a disaster include relocation, social rehabilitation, revival of educational activities, rehabilitation of the elderly, women, children and persons with disabilities, economic rehabilitation, and psychological rehabilitation. The NDMP treats relocation as one component within a broader recovery and rehabilitation process rather than a standalone action.
+
+[SECTION: Institutional Framework — National Level]
+The overall coordination of disaster management vests with the Ministry of Home Affairs. The National Disaster Management Authority (NDMA), headed by the Prime Minister, is the apex body responsible for laying down policies and guidelines for disaster management and approving the National Disaster Management Plan and the plans of central ministries and departments. The National Executive Committee (NEC) assists the NDMA, prepares the National Plan, and coordinates response in the event of any threatening disaster situation.
+
+[SECTION: Institutional Framework — State and District Level]
+Each State/Union Territory has a State Disaster Management Authority (SDMA), headed by the Chief Minister, responsible for laying down state-level policies and plans and approving the State Disaster Management Plan in accordance with NDMA guidelines. At the district level, the District Disaster Management Authority (DDMA), headed by the District Collector/Magistrate/Deputy Commissioner with the elected representative of the local authority as co-chairperson, acts as the planning, coordinating and implementing body for disaster management in the district.
+
+[SECTION: Nodal Ministries for Specific Hazards]
+The Government of India has notified specific central ministries as nodal agencies for the management and mitigation of different disasters. The Ministry of Jal Shakti is the nodal ministry for floods; the Ministry of Mines is the nodal ministry for landslides; the Ministry of Housing and Urban Affairs for urban floods; the Ministry of Earth Sciences for cyclones/tornadoes, earthquakes and tsunamis; and the Ministry of Agriculture and Farmers Welfare for drought, cold wave, frost and hailstorm.
+
+[SECTION: Social Inclusion in Disaster Risk Reduction]
+The preamble of the National Policy on Disaster Management 2009 notes that economically weaker and socially marginalised sections, women, Scheduled Castes, Scheduled Tribes and minorities tend to suffer disproportionately during disasters. The Disaster Management Act, 2005 specifically forbids all forms of discrimination — based on sex, caste, community, descent or religion — in any aspect of disaster management. Social inclusion is treated as equality of rights and opportunities, dignity of the individual, and contributing to resilience for everyone regardless of age, gender, disability or other status.
+
+[SECTION: Financial Arrangements]
+According to the National Policy on Disaster Management 2009, the primary responsibility for disaster management, including undertaking rescue, relief and rehabilitation measures during a disaster, lies with the State Governments; the Union Government supplements state efforts through logistic and financial support. Centrally allocated finances are largely limited to the National Disaster Response Fund and State Disaster Response Fund, meant for immediate relief and emergency response after a disaster; disaster risk reduction mainstreaming is expected to be funded through the regular developmental budgets of central ministries and state/UT agencies rather than a separate dedicated allocation.
+
+[SECTION: Time Frames for Implementation]
+Measures under the NDMP are grouped into short-term (T1, ending 2022), medium-term (T2, ending 2027) and long-term (T3, ending 2030) time frames, aligned with the end year of the Sendai Framework, the Sustainable Development Goals and the Paris Agreement. The designations of short, medium and long term refer to time needed for completion and do not signify an order of priority; many actions run concurrently rather than sequentially.

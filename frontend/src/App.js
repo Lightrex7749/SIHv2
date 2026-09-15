@@ -7,7 +7,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import MainLayout from "@/components/layout/MainLayout";
 import PWAInstallPrompt from "@/components/pwa/PWAInstallPrompt";
 import OfflineIndicator from "@/components/pwa/OfflineIndicator";
-import TelegramMiniApp from "@/components/TelegramMiniApp";
+import DrishtiDashboard from "@/pages/DrishtiDashboard";
 import Landing from "@/pages/Landing";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
@@ -24,6 +24,7 @@ import ScientistPortal from "@/pages/ScientistPortal";
 import AdminDashboard from "@/pages/AdminDashboard";
 import CriticalContacts from "@/pages/CriticalContacts";
 import Profile from "@/pages/Profile";
+import TelegramMiniApp from "@/components/TelegramMiniApp";
 
 function App() {
   return (
@@ -34,8 +35,13 @@ function App() {
           <PWAInstallPrompt />
           <BrowserRouter>
           <Routes>
-            {/* Public Routes */}
-            <Route path="/" element={<Landing />} />
+            {/* DrishtiSetu Primary Decision-Support Dashboard */}
+            <Route path="/" element={<DrishtiDashboard />} />
+            <Route path="/drishti" element={<DrishtiDashboard />} />
+            <Route path="/dashboard" element={<DrishtiDashboard />} />
+            
+            {/* Legacy & Additional Routes */}
+            <Route path="/landing" element={<Landing />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -51,7 +57,10 @@ function App() {
             }>
               <Route index element={<Navigate to="/app/dashboard" replace />} />
               <Route path="dashboard" element={<Dashboard />} />
+              <Route path="drishti" element={<DrishtiDashboard />} />
+              <Route path="relocation" element={<DrishtiDashboard />} />
               <Route path="map" element={<MapView />} />
+
               <Route path="alerts" element={<Alerts />} />
               <Route path="weather" element={<Weather />} />
               <Route path="disasters" element={<Disasters />} />
@@ -65,7 +74,6 @@ function App() {
             </Route>
 
             {/* Legacy routes - redirect to new structure */}
-            <Route path="/dashboard" element={<Navigate to="/app/dashboard" replace />} />
             <Route path="/student" element={<Navigate to="/app/student" replace />} />
             <Route path="/scientist" element={<Navigate to="/app/scientist" replace />} />
             <Route path="/admin" element={<Navigate to="/app/admin" replace />} />

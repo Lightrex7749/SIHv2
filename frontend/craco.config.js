@@ -38,21 +38,23 @@ const webpackConfig = {
     },
     configure: (webpackConfig) => {
       
-      // Configure Cesium
-      const cesiumSource = path.resolve(__dirname, 'node_modules/cesium/Build/Cesium');
-      webpackConfig.plugins.push(
-        new CopyWebpackPlugin({
-          patterns: [
-            { from: path.join(cesiumSource, 'Workers'), to: 'cesium/Workers' },
-            { from: path.join(cesiumSource, 'ThirdParty'), to: 'cesium/ThirdParty' },
-            { from: path.join(cesiumSource, 'Assets'), to: 'cesium/Assets' },
-            { from: path.join(cesiumSource, 'Widgets'), to: 'cesium/Widgets' },
-          ],
-        }),
-        new webpack.DefinePlugin({
-          CESIUM_BASE_URL: JSON.stringify('/cesium'),
-        })
-      );
+      // Configure Cesium only if explicitly enabled
+      if (process.env.ENABLE_CESIUM === "true") {
+        const cesiumSource = path.resolve(__dirname, 'node_modules/cesium/Build/Cesium');
+        webpackConfig.plugins.push(
+          new CopyWebpackPlugin({
+            patterns: [
+              { from: path.join(cesiumSource, 'Workers'), to: 'cesium/Workers' },
+              { from: path.join(cesiumSource, 'ThirdParty'), to: 'cesium/ThirdParty' },
+              { from: path.join(cesiumSource, 'Assets'), to: 'cesium/Assets' },
+              { from: path.join(cesiumSource, 'Widgets'), to: 'cesium/Widgets' },
+            ],
+          }),
+          new webpack.DefinePlugin({
+            CESIUM_BASE_URL: JSON.stringify('/cesium'),
+          })
+        );
+      }
       
       // Cesium module resolution
       webpackConfig.module = {

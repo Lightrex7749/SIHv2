@@ -443,7 +443,26 @@ export const AuthProvider = ({ children }) => {
     return null;
   };
 
-
+  const loginDemoUser = (role = 'admin') => {
+    const demoUser = {
+      id: 'demo_user_suraksha_setu',
+      email: 'admin@suraksha-setu.gov.in',
+      name: 'Suraksha Setu Admin',
+      role: role,
+      photoURL: 'https://api.dicebear.com/7.x/avataaars/svg?seed=admin',
+      emailVerified: true,
+      isDemo: true
+    };
+    const demoToken = 'demo-jwt-token-suraksha-setu-12345';
+    const expiryTime = Date.now() + (24 * 60 * 60 * 1000); // 24 hours
+    localStorage.setItem('auth_token', demoToken);
+    localStorage.setItem('auth_user', JSON.stringify(demoUser));
+    localStorage.setItem('auth_token_expiry', expiryTime.toString());
+    setUser(demoUser);
+    setToken(demoToken);
+    setLoading(false);
+    return demoUser;
+  };
 
   const value = {
     user,
@@ -453,6 +472,7 @@ export const AuthProvider = ({ children }) => {
     signInWithGoogle,
     logout,
     refreshToken,
+    loginDemoUser,
     loading,
     error,
     isAuthenticated: !!user,
@@ -463,3 +483,4 @@ export const AuthProvider = ({ children }) => {
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
+

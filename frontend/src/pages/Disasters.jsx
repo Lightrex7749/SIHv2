@@ -1010,7 +1010,7 @@ const Disasters = () => {
       const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
       pdf.setFontSize(18);
       pdf.setTextColor(30, 30, 30);
-      pdf.text('Suraksha Setu — Disaster Summary Report', 14, 16);
+      pdf.text('DrishtiSetu — Disaster Summary Report', 14, 16);
       pdf.setFontSize(9);
       pdf.setTextColor(120, 120, 120);
       pdf.text(`Generated: ${new Date().toLocaleString()}`, 14, 23);

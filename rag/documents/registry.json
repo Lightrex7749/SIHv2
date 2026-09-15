@@ -1,0 +1,45 @@
+{
+  "documents": [
+    {
+      "doc_id": "NDMA-LANDSLIDES-2009",
+      "title": "National Disaster Management Guidelines: Management of Landslides and Snow Avalanches",
+      "source": "National Disaster Management Authority (NDMA), Government of India",
+      "publication_date": "2009-06",
+      "url": "https://sdma.goa.gov.in/sites/default/files/2022-05/landslidessnowavalanches.pdf",
+      "file": "raw/ndma_landslides_snow_avalanches_2009.txt",
+      "license_notes": "Public government guidance document, freely published by NDMA for national dissemination. Mirrored copy retrieved via the Goa State Disaster Management Authority website.",
+      "document_type": "national_guideline"
+    },
+    {
+      "doc_id": "NDMA-FLOODS-2008",
+      "title": "National Disaster Management Guidelines: Management of Floods",
+      "source": "National Disaster Management Authority (NDMA), Government of India",
+      "publication_date": "2008-01",
+      "url": "https://sdma.goa.gov.in/konkani/sites/default/files/2022-05/flood.pdf",
+      "file": "raw/ndma_management_of_floods_2008.txt",
+      "license_notes": "Public government guidance document, freely published by NDMA for national dissemination. Mirrored copy retrieved via the Goa State Disaster Management Authority website.",
+      "document_type": "national_guideline"
+    },
+    {
+      "doc_id": "NDMA-NDMP-2019",
+      "title": "National Disaster Management Plan (Revised Edition)",
+      "source": "National Disaster Management Authority (NDMA), Ministry of Home Affairs, Government of India",
+      "publication_date": "2019-11",
+      "url": "https://wrd.unwomen.org/sites/default/files/inline-files/ndmp-2019.pdf",
+      "file": "raw/ndma_national_disaster_management_plan_2019.txt",
+      "license_notes": "Public government policy document, freely published by NDMA for national dissemination. Mirrored copy retrieved via UN Women's water/disaster-risk-reduction resource page.",
+      "document_type": "national_plan"
+    },
+    {
+      "doc_id": "MoRD-NRRP-2007",
+      "title": "National Rehabilitation and Resettlement Policy, 2007",
+      "source": "Department of Land Resources, Ministry of Rural Development, Government of India",
+      "publication_date": "2007-10-31",
+      "url": "https://www.refworld.org/docid/5a7acbc04.html",
+      "file": "raw/mord_rehabilitation_resettlement_policy_2007.txt",
+      "license_notes": "Public policy notified in the Gazette of India on 31 October 2007. Excerpted from government-sourced summaries reproduced in Lok Sabha/Rajya Sabha answers (eparlib.nic.in) and public policy portals (indiaenvironmentportal.org.in), since the original Gazette PDF was not reachable from this environment (see README limitations).",
+      "document_type": "national_policy"
+    }
+  ],
+  "note": "Minimum bar per DATA_SOURCES.md was 3-5 real documents; this corpus intentionally covers three hazard/response angles (landslides, floods, the overarching NDMP) plus the resettlement policy most directly relevant to relocation reasoning, so RELOCATION-type queries have real grounding, not just hazard guidance."
+}

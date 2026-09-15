@@ -1,0 +1,36 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Caching & testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Large models, checkpoints, and reference folders (CRITICAL: Never commit large model checkpoints)
+reference/
+*.pt
+*.pth
+*.bin
+*.onnx
+*.safetensors
+*.h5
+checkpoints/
+weights/
+
+# OS specific
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDEs
+.vscode/
+.idea/
