@@ -12,24 +12,9 @@ const DisasterTimeline = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const [disastersRes, alertsRes] = await Promise.all([
-          axios.get(`${API_URL}/disasters?limit=3`),
-          axios.get(`${API_URL}/alerts`)
-        ]);
+        const disastersRes = await axios.get(`${API_URL}/disasters?limit=5`);
 
         const timelineEvents = [];
-        
-        // Add recent alerts
-        const alertsList = alertsRes.data?.alerts || [];
-        alertsList.slice(0, 2).forEach(alert => {
-          const time = new Date(alert.created_at || alert.issued_at);
-          timelineEvents.push({
-            time: time.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
-            title: alert.title || alert.type || 'Alert',
-            type: alert.severity === 'critical' || alert.severity === 'red' ? 'critical' : alert.severity === 'warning' || alert.severity === 'orange' ? 'warning' : 'info',
-            location: alert.location || alert.region || 'Unknown'
-          });
-        });
         
         // Add recent disasters
         const disastersList = disastersRes.data?.disasters || [];

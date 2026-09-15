@@ -27,7 +27,10 @@ GOOGLE_BASE_URL = os.getenv("GOOGLE_BASE_URL", "https://generativelanguage.googl
 GOOGLE_MODEL_CHAT = os.getenv("GOOGLE_MODEL_CHAT", "gemini-2.0-flash")
 OPENROUTER_BASE_URL = os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
 OPENROUTER_VISION_MODEL = os.getenv("OPENROUTER_MODEL_VISION", "openai/gpt-4o-mini")
-OPENROUTER_CHAT_MODEL = os.getenv("OPENROUTER_MODEL_CHAT", "openai/gpt-4o-mini")
+OPENROUTER_CHAT_MODEL = os.getenv(
+    "OPENROUTER_MODEL_CHAT",
+    "nvidia/nemotron-3-ultra-550b-a55b:free",
+)
 OPENROUTER_SITE_URL = os.getenv("OPENROUTER_SITE_URL", "")
 OPENROUTER_APP_NAME = os.getenv("OPENROUTER_APP_NAME", "Suraksha Setu")
 
@@ -137,8 +140,21 @@ class OpenAIClient:
         - model defaults to MODEL_MINI or MODEL_HEAVY when use_heavy=True
         - max_tokens capped by MAX_TOKENS_PER_REQ
         """
+        # Agent and general chat requests use the configured OpenRouter model.
+        # Keep this method's public contract for existing callers while routing
+        # text generation through the shared provider.
+        if self.openrouter_client:
+            return await self.chat_openrouter(
+                system_prompt=system_prompt,
+                user_prompt=user_prompt,
+                model=model or OPENROUTER_CHAT_MODEL,
+                max_tokens=max_tokens or MAX_TOKENS_PER_REQ,
+                temperature=temperature,
+                json_mode=json_mode,
+            )
+
         if not self.client:
-            return {"error": "OpenAI client not initialized", "content": None}
+            return {"error": "No AI chat client initialized", "content": None}
 
         model = model or (MODEL_HEAVY if use_heavy else MODEL_MINI)
         max_tokens = min(max_tokens or MAX_TOKENS_PER_REQ, MAX_TOKENS_PER_REQ)

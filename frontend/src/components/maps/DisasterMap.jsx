@@ -117,8 +117,8 @@ const DisasterMap = () => {
   const fetchDisasterData = async () => {
     setIsRefreshing(true);
     try {
-      // Fetch alerts
-      const alertsRes = await axios.get(`${API_URL}/api/alerts`);
+      // Fetch current disaster events from the backend contract.
+      const alertsRes = await axios.get(`${API_URL}/api/disasters`);
       const alertsPayload = alertsRes.data?.alerts || alertsRes.data || [];
       const alertsData = (Array.isArray(alertsPayload) ? alertsPayload : [])
         .map((alert) => {

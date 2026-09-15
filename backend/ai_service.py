@@ -88,10 +88,11 @@ def generate_ai_consultation(
             continue
 
     # Graceful offline deterministic fallback if network / free-tier is temporarily unavailable
+    fallback_context = habitation_context or {}
     return {
         "answer": (
-            f"Based on DrishtiSetu statutory guidelines for {habitation_context.get('name', 'this habitation')}: "
-            f"Relocation priority is {habitation_context.get('relocation_priority', 'HIGH')}. "
+            f"Based on DrishtiSetu statutory guidelines for {fallback_context.get('name', 'this situation')}: "
+            f"Relocation priority is {fallback_context.get('relocation_priority', 'HIGH')}. "
             f"Per Section 12 of National R&R Policy 2007, safe recipient sites must provide potable water, road access, and educational transit before displacement."
         ),
         "model": "rule_based_fallback",

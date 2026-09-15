@@ -220,11 +220,11 @@ const Alerts = () => {
       }
 
       const data = await cachedFetchJson(
-        `${API_URL}/api/alerts${params.toString() ? '?' + params.toString() : ''}`,
+        `${API_URL}/api/disasters${params.toString() ? '?' + params.toString() : ''}`,
         { ttlMs: 45 * 1000 }
       );
 
-      const formattedAlerts = (data.alerts || []).map(alert => ({
+      const formattedAlerts = (data.disasters || data.alerts || []).map(alert => ({
         id: alert.id || Math.random(),
         type: (alert.report_type || alert.type || alert.alert_type || 'info').toLowerCase(),
         severity: alert.severity?.toLowerCase() || 'info',

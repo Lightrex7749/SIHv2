@@ -6,11 +6,16 @@ Full compliance with API Contract (v2).
 
 import sys
 from pathlib import Path
+from dotenv import load_dotenv
 
 # Ensure project root is on Python sys.path
 ROOT_DIR = Path(__file__).resolve().parent.parent
+BACKEND_DIR = Path(__file__).resolve().parent
+load_dotenv(ROOT_DIR / ".env")
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
+if str(BACKEND_DIR) not in sys.path:
+    sys.path.insert(0, str(BACKEND_DIR))
 
 from fastapi import FastAPI, HTTPException, Depends, status
 from fastapi.middleware.cors import CORSMiddleware
@@ -36,6 +41,8 @@ from gis.service import (
     get_layer_geojson,
     get_risk_layers_manifest,
     get_relocation_sites,
+    get_flood_reference_points,
+    get_flood_reference_areas,
 )
 
 # Module 4: RAG Query Handler
@@ -47,6 +54,15 @@ from agents.decision_agent import DecisionAgent, DecisionAnalyzeResponse
 
 # Decision Audit Log
 from backend.drishti_db import log_authority_decision, get_decision_history, get_all_decision_logs
+from backend.routes.admin import router as admin_router
+from backend.routes.community import community_router
+from backend.routes.disasters import disasters_router
+from backend.routes.location import location_router
+from backend.routes.profile import profile_router
+from backend.routes.risk import risk_router
+from backend.routes.scientist import scientist_router
+from backend.routes.telegram import telegram_router
+from backend.routes.weather import weather_router
 
 # Create FastAPI App
 app = FastAPI(
@@ -66,6 +82,17 @@ app.add_middleware(
 
 # Mount Computer Vision router (POST /api/v1/vision/analyze)
 app.include_router(vision_router)
+
+# Mount the operational APIs consumed by the frontend dashboard.
+app.include_router(admin_router)
+app.include_router(community_router)
+app.include_router(disasters_router)
+app.include_router(location_router)
+app.include_router(profile_router)
+app.include_router(risk_router)
+app.include_router(scientist_router)
+app.include_router(telegram_router)
+app.include_router(weather_router)
 
 decision_agent = DecisionAgent()
 relocation_engine = RelocationEngine()
@@ -157,6 +184,16 @@ async def get_risk_layers():
 @app.get("/api/v1/gis/layers/{layer_name}", tags=["GIS"])
 async def get_gis_layer(layer_name: str):
     return get_layer_geojson(layer_name)
+
+
+@app.get("/api/v1/gis/flood-reference-points", tags=["GIS"])
+async def get_flood_points():
+    return get_flood_reference_points()
+
+
+@app.get("/api/v1/gis/flood-reference-areas", tags=["GIS"])
+async def get_flood_areas():
+    return get_flood_reference_areas()
 
 
 # -------------------------------------------------------------

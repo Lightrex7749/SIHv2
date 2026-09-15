@@ -30,14 +30,13 @@ const ImpactStats = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const [disastersRes, alertsRes, sheltersRes] = await Promise.all([
+        const [disastersRes, sheltersRes] = await Promise.all([
           axios.get(`${API_URL}/disasters?limit=100`),
-          axios.get(`${API_URL}/alerts`),
           axios.get(`${API_URL}/evacuation-centers`)
         ]);
 
         const disasters = disastersRes.data?.disasters || disastersRes.data || [];
-        const alerts = alertsRes.data?.alerts || alertsRes.data || [];
+        const alerts = disastersRes.data?.disasters || disastersRes.data?.alerts || [];
         const shelters = Array.isArray(sheltersRes.data) ? sheltersRes.data : sheltersRes.data?.centers || [];
 
         // Calculate affected people from recent disasters

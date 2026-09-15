@@ -26,7 +26,7 @@ if DATABASE_URL:
         )
     elif DATABASE_URL.startswith('postgresql://'):
         # PostgreSQL for production (Render)
-        print("🔧 Using PostgreSQL for production")
+        print("Using PostgreSQL for production")
         DATABASE_URL = DATABASE_URL.replace('postgresql://', 'postgresql+asyncpg://', 1)
         engine = create_async_engine(
             DATABASE_URL,
@@ -41,7 +41,7 @@ if DATABASE_URL:
         )
     elif DATABASE_URL.startswith('postgresql+asyncpg://'):
         # Already converted PostgreSQL URL
-        print("🔧 Using PostgreSQL for production")
+        print("Using PostgreSQL for production")
         engine = create_async_engine(
             DATABASE_URL,
             echo=False,

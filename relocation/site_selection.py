@@ -44,6 +44,10 @@ class RelocationEngine:
 
         population = habitation["population"]
         candidate_sites = get_relocation_sites()
+        region = habitation.get("region", "Chamoli")
+        regional_sites = [site for site in candidate_sites if site.get("region", "Chamoli") == region]
+        if regional_sites:
+            candidate_sites = regional_sites
 
         # Ranking logic:
         # 1. Non-conflicting sites preferred over conflicting ones.

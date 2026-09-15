@@ -123,6 +123,69 @@ HABITATIONS_DATA = [
         "historical_events": 3,
         "description": "Isolated high altitude agrarian settlement vulnerable to road cutoffs during heavy precipitation.",
         "hazard_type": "LANDSLIDE"
+    },
+    {
+        "id": "H007",
+        "name": "Saptari Terai Flood Scenario",
+        "district": "Saptari",
+        "state": "Koshi Province, Nepal",
+        "region": "Nepal Terai",
+        "latitude": 26.63,
+        "longitude": 86.75,
+        "population": 980,
+        "vulnerability_score": 78.0,
+        "risk_score": 79.0,
+        "risk_level": "HIGH",
+        "relocation_priority": "SHORT_TERM",
+        "elevation": 76.0,
+        "slope": 2.0,
+        "rainfall": 185.0,
+        "historical_events": 4,
+        "description": "Seeded cross-border flood scenario for testing regional relocation workflows; verify against official incident feeds before operational use.",
+        "hazard_type": "FLOOD",
+        "data_status": "SCENARIO_SEEDED"
+    },
+    {
+        "id": "H008",
+        "name": "Darbhanga Kosi Flood Scenario",
+        "district": "Darbhanga",
+        "state": "Bihar, India",
+        "region": "Bihar",
+        "latitude": 26.15,
+        "longitude": 85.90,
+        "population": 1450,
+        "vulnerability_score": 82.0,
+        "risk_score": 84.0,
+        "risk_level": "CRITICAL",
+        "relocation_priority": "IMMEDIATE",
+        "elevation": 52.0,
+        "slope": 1.5,
+        "rainfall": 210.0,
+        "historical_events": 5,
+        "description": "Seeded Kosi flood scenario for regional decision-support testing; connect official flood and shelter feeds for live deployment.",
+        "hazard_type": "FLOOD",
+        "data_status": "SCENARIO_SEEDED"
+    },
+    {
+        "id": "H009",
+        "name": "Dhemaji Brahmaputra Flood Scenario",
+        "district": "Dhemaji",
+        "state": "Assam, India",
+        "region": "Assam",
+        "latitude": 27.48,
+        "longitude": 94.58,
+        "population": 1180,
+        "vulnerability_score": 80.0,
+        "risk_score": 81.0,
+        "risk_level": "HIGH",
+        "relocation_priority": "SHORT_TERM",
+        "elevation": 102.0,
+        "slope": 2.5,
+        "rainfall": 225.0,
+        "historical_events": 6,
+        "description": "Seeded Brahmaputra flood scenario for regional workflow testing; verify current conditions with official Assam alerts before action.",
+        "hazard_type": "FLOOD",
+        "data_status": "SCENARIO_SEEDED"
     }
 ]
 
@@ -191,7 +254,147 @@ CANDIDATE_SITES_DATA = [
         "school_access_score": 90.0,
         "suitability_score": 91.0,
         "description": "Wide, flat airstrip-adjacent alluvial terrace with robust disaster logistics access."
+    },
+    {
+        "site_id": "S005",
+        "name": "Rajbiraj Raised Community Terrace",
+        "region": "Nepal Terai",
+        "latitude": 26.54,
+        "longitude": 86.75,
+        "elevation": 92.0,
+        "available_area": 42000.0,
+        "estimated_capacity": 1800,
+        "hazard_score": 18.0,
+        "road_access_score": 78.0,
+        "healthcare_access_score": 70.0,
+        "water_access_score": 82.0,
+        "school_access_score": 76.0,
+        "suitability_score": 80.0,
+        "description": "Seeded raised-terrain candidate for Nepal Terai flood scenario demonstrations; validate land and shelter availability before use."
+    },
+    {
+        "site_id": "S006",
+        "name": "Darbhanga Elevated Relief Campus",
+        "region": "Bihar",
+        "latitude": 26.17,
+        "longitude": 85.89,
+        "elevation": 66.0,
+        "available_area": 50000.0,
+        "estimated_capacity": 2200,
+        "hazard_score": 20.0,
+        "road_access_score": 84.0,
+        "healthcare_access_score": 80.0,
+        "water_access_score": 86.0,
+        "school_access_score": 82.0,
+        "suitability_score": 83.0,
+        "description": "Seeded elevated candidate for Bihar flood scenario demonstrations; verify drainage, access, and land-use status before use."
+    },
+    {
+        "site_id": "S007",
+        "name": "Dhemaji Raised Relief Zone",
+        "region": "Assam",
+        "latitude": 27.47,
+        "longitude": 94.55,
+        "elevation": 125.0,
+        "available_area": 46000.0,
+        "estimated_capacity": 1900,
+        "hazard_score": 22.0,
+        "road_access_score": 76.0,
+        "healthcare_access_score": 72.0,
+        "water_access_score": 80.0,
+        "school_access_score": 74.0,
+        "suitability_score": 79.0,
+        "description": "Seeded raised candidate for Assam flood scenario demonstrations; verify embankment, drainage, and shelter readiness before use."
     }
+]
+
+# Source-attributed reference points for map context. These are not additional
+# model scores; they identify locations and datasets that should be checked
+# before an authority uses the decision engine operationally.
+FLOOD_REFERENCE_POINTS = [
+    {
+        "id": "FREF-NPL-01",
+        "name": "Rasuwagadhi / Upper Trishuli",
+        "country": "Nepal",
+        "region": "Nepal Flood 2026",
+        "latitude": 28.283,
+        "longitude": 85.379,
+        "hazard_type": "FLOOD",
+        "event_date": "2026-08-27",
+        "data_status": "SOURCE_ATTRIBUTED_REFERENCE",
+        "source_name": "HDX / HOT Nepal Flood 2026 Flood Affected Area",
+        "source_url": "https://data.humdata.org/dataset/hot_flood_npl",
+    },
+    {
+        "id": "FREF-NPL-02",
+        "name": "Nuwakot Trishuli Corridor",
+        "country": "Nepal",
+        "region": "Nepal Flood 2026",
+        "latitude": 27.916,
+        "longitude": 85.166,
+        "hazard_type": "FLOOD",
+        "event_date": "2026-08-27",
+        "data_status": "SOURCE_ATTRIBUTED_REFERENCE",
+        "source_name": "HDX / HOT Nepal Flood 2026 River Corridor",
+        "source_url": "https://data.humdata.org/dataset/hot_flood_npl_corridor",
+    },
+    {
+        "id": "FREF-NPL-03",
+        "name": "Devghat / Narayani Confluence",
+        "country": "Nepal",
+        "region": "Nepal Flood 2026",
+        "latitude": 27.735,
+        "longitude": 84.438,
+        "hazard_type": "FLOOD",
+        "event_date": "2026-08-27",
+        "data_status": "SOURCE_ATTRIBUTED_REFERENCE",
+        "source_name": "HDX / HOT Nepal Flood 2026 River Corridor",
+        "source_url": "https://data.humdata.org/dataset/hot_flood_npl_corridor",
+    },
+    {
+        "id": "FREF-IND-BR-01",
+        "name": "Darbhanga / Kosi Basin Reference",
+        "country": "India",
+        "region": "Bihar",
+        "latitude": 26.154,
+        "longitude": 85.891,
+        "hazard_type": "FLOOD",
+        "event_date": None,
+        "data_status": "ADMINISTRATIVE_REFERENCE",
+        "source_name": "OpenStreetMap place reference; live flood status not asserted",
+        "source_url": "https://www.openstreetmap.org/#map=10/26.154/85.891",
+    },
+    {
+        "id": "FREF-IND-AS-01",
+        "name": "Dibrugarh / Brahmaputra Plain Reference",
+        "country": "India",
+        "region": "Assam",
+        "latitude": 27.472,
+        "longitude": 94.912,
+        "hazard_type": "FLOOD",
+        "event_date": "2018-06-15",
+        "data_status": "SOURCE_ATTRIBUTED_REFERENCE",
+        "source_name": "UNITAR-UNOSAT satellite-detected waters in Assam and Northeast India",
+        "source_url": "https://unosat-maps.web.cern.ch/unosat-maps/BD/FL20180619BGD/",
+    },
+]
+
+FLOOD_REFERENCE_AREAS = [
+    {
+        "id": "FAREA-NPL-2026",
+        "name": "Nepal Flood 2026 observed extent (source bounding box)",
+        "source_name": "HDX / HOT Nepal Flood 2026 Flood Affected Area",
+        "source_url": "https://data.humdata.org/dataset/hot_flood_npl",
+        "data_status": "SOURCE_BBOX_VISUALIZATION",
+        "event_date": "2026-08-27",
+        "bbox": [
+            [27.795150, 84.556395],
+            [27.795150, 85.379843],
+            [28.280699, 85.379843],
+            [28.280699, 84.556395],
+            [27.795150, 84.556395],
+        ],
+    },
 ]
 
 
@@ -218,6 +421,27 @@ def get_relocation_sites() -> List[Dict[str, Any]]:
     return enriched
 
 
+def get_flood_reference_points() -> List[Dict[str, Any]]:
+    return FLOOD_REFERENCE_POINTS
+
+
+def get_flood_reference_areas() -> Dict[str, Any]:
+    return {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "id": area["id"],
+                "properties": {key: value for key, value in area.items() if key != "bbox"},
+                "geometry": {"type": "Polygon", "coordinates": [[
+                    [longitude, latitude] for latitude, longitude in area["bbox"]
+                ]]},
+            }
+            for area in FLOOD_REFERENCE_AREAS
+        ],
+    }
+
+
 def get_layer_geojson(layer_name: str) -> Dict[str, Any]:
     norm_name = layer_name.lower().replace("_", "-")
 
@@ -237,6 +461,8 @@ def get_layer_geojson(layer_name: str) -> Dict[str, Any]:
                     "vulnerability_score": h["vulnerability_score"],
                     "relocation_priority": h["relocation_priority"],
                     "hazard_type": h.get("hazard_type", "MULTI_HAZARD"),
+                    "region": h.get("region", "Chamoli"),
+                    "data_status": h.get("data_status", "PILOT_SEEDED"),
                     "description": h.get("description", ""),
                 },
                 "geometry": {
@@ -303,6 +529,8 @@ def get_layer_geojson(layer_name: str) -> Dict[str, Any]:
                 "id": s["site_id"],
                 "properties": {
                     "name": s["name"],
+                    "region": s.get("region", "Chamoli"),
+                    "data_status": s.get("data_status", "SCENARIO_SEEDED"),
                     "available_area": s["available_area"],
                     "estimated_capacity": s["estimated_capacity"],
                     "suitability_score": s["suitability_score"],

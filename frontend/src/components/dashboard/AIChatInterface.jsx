@@ -255,16 +255,13 @@ const AIChatInterface = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post(`${API_URL}/api/ai/chat`, {
-        message: textToSend,
-        role: 'citizen',
-        context: { domain: 'dashboard' },
-        language: inputLanguage
+      const response = await axios.post(`${API_URL}/api/v1/ai/consult`, {
+        query: textToSend,
       });
 
       const aiMessage = {
         role: 'assistant',
-        content: response.data.response || response.data.message || 'I understand your question. Let me help you with that information.',
+        content: response.data.answer || response.data.response || response.data.message || 'I understand your question. Let me help you with that information.',
         timestamp: new Date(),
         data: response.data.data,
         language: inputLanguage

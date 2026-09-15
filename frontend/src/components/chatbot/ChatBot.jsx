@@ -11,7 +11,7 @@ import ChatMessage from './ChatMessage';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000';
-const API_URL = `${BACKEND_URL}/api/ai/chat`;
+const API_URL = `${BACKEND_URL}/api/v1/ai/consult`;
 const DEFAULT_SUGGESTIONS = [
   'What should I do during an earthquake?',
   'How to prepare for a cyclone?',
@@ -262,18 +262,7 @@ const ChatBot = () => {
     setIsTyping(true);
 
     try {
-      const response = await axios.post(API_URL, {
-        message: textToSend,
-        query: textToSend,
-        role: 'citizen',
-        session_id: sessionId,
-        user_id: user?.id,
-        context: {
-          user_location: 'India',
-          session_id: sessionId,
-          user_id: user?.id,
-        }
-      });
+      const response = await axios.post(API_URL, { query: textToSend });
 
       // Add the bot response as a new message, keep the user message
       const botMessage = {

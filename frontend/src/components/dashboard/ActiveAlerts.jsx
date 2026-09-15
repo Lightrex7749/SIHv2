@@ -13,8 +13,8 @@ const ActiveAlerts = () => {
   useEffect(() => {
     const fetchAlerts = async () => {
       try {
-        const response = await axios.get(`${API_URL}/alerts`);
-        const alertsArr = response.data?.alerts || response.data || [];
+        const response = await axios.get(`${API_URL}/disasters`);
+        const alertsArr = response.data?.disasters || response.data?.alerts || response.data || [];
         const recentAlerts = alertsArr.slice(0, 5).map(alert => ({
           id: alert.id,
           type: alert.severity === 'critical' || alert.severity === 'red' ? 'critical' : alert.severity === 'warning' || alert.severity === 'orange' ? 'warning' : 'info',

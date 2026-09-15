@@ -15,7 +15,7 @@ import axios from 'axios';
 import { useLocation as useAppLocation } from '@/contexts/LocationContext';
 import { readTimedCache } from '@/utils/locationCache';
 
-const API_URL = (process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000') + '/api';
+const API_URL = process.env.REACT_APP_BACKEND_URL || process.env.REACT_APP_API_URL || 'http://localhost:8000';
 const DASHBOARD_CHAT_STORAGE_KEY = 'suraksha_dashboard_ai_chat_v1';
 const WEATHER_BOOTSTRAP_CACHE_KEY = 'weather_dashboard_bootstrap_v1';
 const DASHBOARD_WELCOME_MESSAGE = {
@@ -208,17 +208,13 @@ const EnhancedAIChatInterface = () => {
       const detectedLang = detectLanguage(userMessage.text);
       setDetectedLanguage(detectedLang);
 
-      const response = await axios.post(`${API_URL}/ai/chat`, {
-        message: content,
+      const response = await axios.post(`${API_URL}/api/v1/ai/consult`, {
         query: content,
-        role: 'citizen',
-        language: detectedLang,
-        locale: detectedLang,
-        context: buildContextPayload(detectedLang),
+        habitation_id: null,
       });
 
       const botText = normalizeMessageText(
-        response?.data?.response ?? response?.data?.message,
+        response?.data?.answer ?? response?.data?.response ?? response?.data?.message,
         'I understood your request, but could not format the response. Please try again.'
       ).trim();
 
@@ -227,7 +223,7 @@ const EnhancedAIChatInterface = () => {
         type: 'bot',
         text: botText,
         timestamp: new Date(),
-        data: response.data.data,
+        data: response.data,
       };
 
       setMessages((prev) => [...prev, botMessage]);

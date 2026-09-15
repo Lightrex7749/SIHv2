@@ -22,7 +22,7 @@ import {
   Database,
   Info
 } from "lucide-react";
-import { MapContainer, TileLayer, Marker, Popup, Polygon, Tooltip } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, Polygon, CircleMarker, Tooltip, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -34,7 +34,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
 });
 
-const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:8000";
+const API_BASE = process.env.REACT_APP_BACKEND_URL || process.env.REACT_APP_API_URL || "http://localhost:8000";
 
 // Custom marker icons by risk level
 const createColoredIcon = (color) => {
@@ -51,6 +51,17 @@ const iconOrange = createColoredIcon("#f97316");
 const iconYellow = createColoredIcon("#eab308");
 const iconGreen = createColoredIcon("#10b981");
 const iconBlue = createColoredIcon("#3b82f6");
+
+function MapViewport({ latitude, longitude }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (latitude == null || longitude == null) return;
+    map.flyTo([latitude, longitude], 9, { duration: 0.8 });
+  }, [latitude, longitude, map]);
+
+  return null;
+}
 
 // Google Maps & Topo Tile Providers (Normal, Satellite, Terrain / Altitude)
 const MAP_LAYERS = {
@@ -153,6 +164,9 @@ export default function DrishtiDashboard() {
   const [selectedHabId, setSelectedHabId] = useState("H001");
   const [habitationDetails, setHabitationDetails] = useState(null);
   const [decisionData, setDecisionData] = useState(null);
+  const [relocationSites, setRelocationSites] = useState([]);
+  const [floodReferencePoints, setFloodReferencePoints] = useState([]);
+  const [floodReferenceAreas, setFloodReferenceAreas] = useState([]);
   const [explainData, setExplainData] = useState(null);
   const [showExplainModal, setShowExplainModal] = useState(false);
   const [visionData, setVisionData] = useState(null);
@@ -205,6 +219,22 @@ export default function DrishtiDashboard() {
   // Load habitations on mount
   useEffect(() => {
     fetchHabitations();
+    axios.get(`${API_BASE}/api/v1/gis/layers/relocation-sites`)
+      .then((res) => setRelocationSites(
+        (res.data?.features || []).map((feature) => ({
+          site_id: feature.id,
+          latitude: feature.geometry?.coordinates?.[1],
+          longitude: feature.geometry?.coordinates?.[0],
+          ...feature.properties,
+        }))
+      ))
+      .catch((err) => console.warn("Relocation sites unavailable:", err));
+    axios.get(`${API_BASE}/api/v1/gis/flood-reference-points`)
+      .then((res) => setFloodReferencePoints(res.data || []))
+      .catch((err) => console.warn("Flood reference points unavailable:", err));
+    axios.get(`${API_BASE}/api/v1/gis/flood-reference-areas`)
+      .then((res) => setFloodReferenceAreas(res.data?.features || []))
+      .catch((err) => console.warn("Flood reference areas unavailable:", err));
   }, []);
 
   // Fetch full details when selected habitation changes
@@ -225,10 +255,13 @@ export default function DrishtiDashboard() {
       console.warn("Using fallback local habitations:", err);
       // Local fallback data
       const fallback = [
-        { id: "H001", name: "Joshimath (Sunil Ward)", district: "Chamoli", latitude: 30.556, longitude: 79.566, population: 1250, risk_score: 82.5, risk_level: "CRITICAL", relocation_priority: "IMMEDIATE" },
-        { id: "H002", name: "Raini Village", district: "Chamoli", latitude: 30.485, longitude: 79.702, population: 420, risk_score: 89.0, risk_level: "CRITICAL", relocation_priority: "IMMEDIATE" },
-        { id: "H003", name: "Helang Habitation", district: "Chamoli", latitude: 30.528, longitude: 79.510, population: 890, risk_score: 71.5, risk_level: "HIGH", relocation_priority: "SHORT_TERM" },
-        { id: "H004", name: "Pipalkoti Settlement", district: "Chamoli", latitude: 30.430, longitude: 79.430, population: 1600, risk_score: 48.0, risk_level: "MODERATE", relocation_priority: "LONG_TERM" },
+        { id: "H001", name: "Joshimath (Sunil Ward)", district: "Chamoli", region: "Chamoli", latitude: 30.556, longitude: 79.566, population: 1250, risk_score: 82.5, risk_level: "CRITICAL", relocation_priority: "IMMEDIATE" },
+        { id: "H002", name: "Raini Village", district: "Chamoli", region: "Chamoli", latitude: 30.485, longitude: 79.702, population: 420, risk_score: 89.0, risk_level: "CRITICAL", relocation_priority: "IMMEDIATE" },
+        { id: "H003", name: "Helang Habitation", district: "Chamoli", region: "Chamoli", latitude: 30.528, longitude: 79.510, population: 890, risk_score: 71.5, risk_level: "HIGH", relocation_priority: "SHORT_TERM" },
+        { id: "H004", name: "Pipalkoti Settlement", district: "Chamoli", region: "Chamoli", latitude: 30.430, longitude: 79.430, population: 1600, risk_score: 48.0, risk_level: "MODERATE", relocation_priority: "LONG_TERM" },
+        { id: "H007", name: "Saptari Terai Flood Scenario", district: "Saptari", state: "Koshi Province, Nepal", region: "Nepal Terai", latitude: 26.63, longitude: 86.75, population: 980, risk_score: 79.0, risk_level: "HIGH", relocation_priority: "SHORT_TERM", data_status: "SCENARIO_SEEDED" },
+        { id: "H008", name: "Darbhanga Kosi Flood Scenario", district: "Darbhanga", state: "Bihar, India", region: "Bihar", latitude: 26.15, longitude: 85.90, population: 1450, risk_score: 84.0, risk_level: "CRITICAL", relocation_priority: "IMMEDIATE", data_status: "SCENARIO_SEEDED" },
+        { id: "H009", name: "Dhemaji Brahmaputra Flood Scenario", district: "Dhemaji", state: "Assam, India", region: "Assam", latitude: 27.48, longitude: 94.58, population: 1180, risk_score: 81.0, risk_level: "HIGH", relocation_priority: "SHORT_TERM", data_status: "SCENARIO_SEEDED" },
       ];
       setHabitations(fallback);
       setSelectedHabId("H001");
@@ -318,6 +351,15 @@ export default function DrishtiDashboard() {
   };
 
   const activeHab = habitationDetails || habitations.find(h => h.id === selectedHabId) || {};
+  const recommendedSiteId = decisionData?.relocation?.recommended_site;
+  const recommendedSite = relocationSites.find((site) => site.site_id === recommendedSiteId);
+  const siteName = recommendedSite?.name || recommendedSiteId || "No site selected";
+  const siteCapacity = decisionData?.relocation?.capacity ?? recommendedSite?.estimated_capacity;
+  const populationToRelocate = activeHab.population ?? decisionData?.habitation?.population ?? 0;
+  const usableCapacity = siteCapacity ? Math.floor(siteCapacity * 0.9) : null;
+  const capacitySufficient = decisionData?.relocation?.capacity_sufficient;
+  const hasLandUseConflict = decisionData?.relocation?.land_use_conflict ?? recommendedSite?.land_use_conflict;
+  const estimatedCost = decisionData?.relocation?.estimated_cost;
   const currentRiskLevel = decisionData?.risk?.risk_level || activeHab.risk_level || "HIGH";
   const isCritical = currentRiskLevel === "CRITICAL";
 
@@ -345,6 +387,11 @@ export default function DrishtiDashboard() {
           <div className="p-2 bg-indigo-600 rounded-lg shadow-lg shadow-indigo-500/30">
             <Shield className="w-6 h-6 text-white" />
           </div>
+          {activeHab.data_status === "SCENARIO_SEEDED" && (
+            <span className="px-2 py-1 text-[10px] font-semibold bg-amber-500/10 text-amber-300 border border-amber-500/30 rounded">
+              Seeded scenario data - verify official live feeds before action
+            </span>
+          )}
           <div>
             <div className="flex items-center space-x-2">
               <h1 className="text-xl font-bold tracking-tight text-white">{t.title}</h1>
@@ -465,7 +512,7 @@ export default function DrishtiDashboard() {
           >
             {habitations.map((h) => (
               <option key={h.id} value={h.id}>
-                {h.name} ({h.risk_level || "RISK"}) — Pop: {h.population?.toLocaleString() || 1200}
+                {h.region && h.region !== "Chamoli" ? `${h.region} · ` : ""}{h.name} ({h.risk_level || "RISK"}) — Pop: {h.population?.toLocaleString() || 1200}
               </option>
             ))}
           </select>
@@ -582,11 +629,12 @@ export default function DrishtiDashboard() {
             <div className="flex-1 relative z-0 min-h-[420px]">
               <MapContainer
                 center={[activeHab.latitude || 30.556, activeHab.longitude || 79.566]}
-                zoom={11}
+                zoom={activeHab.region && activeHab.region !== "Chamoli" ? 9 : 11}
                 scrollWheelZoom={false}
                 className="h-full w-full"
                 style={{ height: "100%", width: "100%" }}
               >
+                <MapViewport latitude={activeHab.latitude} longitude={activeHab.longitude} />
                 <TileLayer
                   key={mapBaseLayer}
                   attribution={MAP_LAYERS[mapBaseLayer].attribution}
@@ -594,25 +642,29 @@ export default function DrishtiDashboard() {
                   maxZoom={MAP_LAYERS[mapBaseLayer].maxZoom}
                 />
 
-                {/* Red Zone Hazard Scarp Polygon */}
-                <Polygon
-                  positions={redZoneCoords}
-                  pathOptions={{ color: "#ef4444", fillColor: "#ef4444", fillOpacity: 0.35, weight: 2 }}
-                >
-                  <Tooltip permanent direction="center" className="bg-red-950 text-red-200 border-none text-[10px] font-bold">
-                    Joshimath Subsidence Red Zone
-                  </Tooltip>
-                </Polygon>
+                {activeHab.region === "Chamoli" && (
+                  <>
+                    {/* Red Zone Hazard Scarp Polygon */}
+                    <Polygon
+                      positions={redZoneCoords}
+                      pathOptions={{ color: "#ef4444", fillColor: "#ef4444", fillOpacity: 0.35, weight: 2 }}
+                    >
+                      <Tooltip permanent direction="center" className="bg-red-950 text-red-200 border-none text-[10px] font-bold">
+                        Joshimath Subsidence Red Zone
+                      </Tooltip>
+                    </Polygon>
 
-                {/* Protected Eco-Sensitive Zone Polygon */}
-                <Polygon
-                  positions={ecoZoneCoords}
-                  pathOptions={{ color: "#f59e0b", fillColor: "#f59e0b", fillOpacity: 0.25, weight: 2, dashArray: "4, 4" }}
-                >
-                  <Tooltip direction="center" className="bg-amber-950 text-amber-200 border-none text-[10px]">
-                    Nanda Devi Eco-Sensitive Buffer (Conflict Zone)
-                  </Tooltip>
-                </Polygon>
+                    {/* Protected Eco-Sensitive Zone Polygon */}
+                    <Polygon
+                      positions={ecoZoneCoords}
+                      pathOptions={{ color: "#f59e0b", fillColor: "#f59e0b", fillOpacity: 0.25, weight: 2, dashArray: "4, 4" }}
+                    >
+                      <Tooltip direction="center" className="bg-amber-950 text-amber-200 border-none text-[10px]">
+                        Nanda Devi Eco-Sensitive Buffer (Conflict Zone)
+                      </Tooltip>
+                    </Polygon>
+                  </>
+                )}
 
                 {/* Habitations Markers */}
                 {habitations.map((h) => {
@@ -651,59 +703,65 @@ export default function DrishtiDashboard() {
                   );
                 })}
 
-                {/* Candidate Relocation Site Markers */}
-                <Marker position={[30.535, 79.585]} icon={iconGreen}>
-                  {showAltitudeBadges && (
-                    <Tooltip permanent direction="top" className="bg-emerald-950/90 text-emerald-200 border border-emerald-700 text-[10px] font-mono px-1 py-0.5 rounded shadow">
-                      🏔️ Dhak: 1,920m (Slope: 11°)
-                    </Tooltip>
-                  )}
-                  <Popup>
-                    <div className="text-xs text-slate-900">
-                      <h4 className="font-bold text-emerald-700">Dhak Plateau Safe Terrace (S001)</h4>
-                      <p>Capacity: 1,800 persons | Suitability: 84.5% | Elevation: 1,920m</p>
-                      <span className="inline-block mt-1 px-2 py-0.5 bg-emerald-100 text-emerald-800 font-semibold rounded text-[10px]">
-                        CLEAR (No Conflict)
-                      </span>
-                    </div>
-                  </Popup>
-                </Marker>
+                {/* Candidate Relocation Site Markers loaded from the GIS API */}
+                {relocationSites.map((site) => {
+                  const isConflict = Boolean(site.land_use_conflict);
+                  const siteIcon = isConflict ? iconYellow : site.site_id === recommendedSiteId ? iconGreen : iconBlue;
+                  return (
+                    <Marker
+                      key={site.site_id}
+                      position={[site.latitude || 30.55, site.longitude || 79.56]}
+                      icon={siteIcon}
+                    >
+                      {showAltitudeBadges && (
+                        <Tooltip permanent direction="top" className="bg-slate-900/90 text-cyan-200 border border-slate-700 text-[10px] font-mono px-1 py-0.5 rounded shadow">
+                          {site.site_id} | {site.region || "Chamoli"}
+                        </Tooltip>
+                      )}
+                      <Popup>
+                        <div className="text-xs text-slate-900">
+                          <h4 className="font-bold text-emerald-700">{site.name} ({site.site_id})</h4>
+                          <p>Capacity: {site.estimated_capacity?.toLocaleString()} persons | Suitability: {site.suitability_score}%</p>
+                          <span className={`inline-block mt-1 px-2 py-0.5 font-semibold rounded text-[10px] ${isConflict ? "bg-red-100 text-red-800" : "bg-emerald-100 text-emerald-800"}`}>
+                            {isConflict ? "CONFLICT: " + (site.land_use_conflict_reason || "Land-use restriction") : "CLEAR (No Conflict)"}
+                          </span>
+                        </div>
+                      </Popup>
+                    </Marker>
+                  );
+                })}
 
-                {/* Land-Use Conflict Site (S003) */}
-                <Marker position={[30.505, 79.660]} icon={iconYellow}>
-                  {showAltitudeBadges && (
-                    <Tooltip permanent direction="top" className="bg-amber-950/90 text-amber-200 border border-amber-700 text-[10px] font-mono px-1 py-0.5 rounded shadow">
-                      🏔️ Nanda Devi Buffer: 2,150m
+                {/* Source-attributed flood references and observed-area visualization */}
+                {floodReferenceAreas.map((area) => (
+                  <Polygon
+                    key={area.id}
+                    positions={area.geometry.coordinates[0].map(([longitude, latitude]) => [latitude, longitude])}
+                    pathOptions={{ color: "#38bdf8", fillColor: "#38bdf8", fillOpacity: 0.12, weight: 2, dashArray: "6, 4" }}
+                  >
+                    <Tooltip direction="center" className="bg-sky-950 text-sky-200 border-sky-700 text-[10px]">
+                      {area.properties.name}
                     </Tooltip>
-                  )}
-                  <Popup>
-                    <div className="text-xs text-slate-900">
-                      <h4 className="font-bold text-amber-700">Nanda Devi Buffer Site (S003)</h4>
-                      <p>Capacity: 1,400 persons | Suitability: 42.0% | Elevation: 2,150m</p>
-                      <span className="inline-block mt-1 px-2 py-0.5 bg-red-100 text-red-800 font-bold rounded text-[10px]">
-                        CONFLICT: Eco-Sensitive Reserve
-                      </span>
-                    </div>
-                  </Popup>
-                </Marker>
-
-                {/* Alternate Safe Site (Pipalkoti S002) */}
-                <Marker position={[30.445, 79.415]} icon={iconBlue}>
-                  {showAltitudeBadges && (
-                    <Tooltip permanent direction="top" className="bg-blue-950/90 text-blue-200 border border-blue-700 text-[10px] font-mono px-1 py-0.5 rounded shadow">
-                      🏔️ Pipalkoti: 1,330m (Slope: 9°)
-                    </Tooltip>
-                  )}
-                  <Popup>
-                    <div className="text-xs text-slate-900">
-                      <h4 className="font-bold text-blue-700">Pipalkoti Upper Tableland (S002)</h4>
-                      <p>Capacity: 2,400 persons | Suitability: 88.0% | Elevation: 1,330m</p>
-                      <span className="inline-block mt-1 px-2 py-0.5 bg-blue-100 text-blue-800 font-semibold rounded text-[10px]">
-                        AVAILABLE
-                      </span>
-                    </div>
-                  </Popup>
-                </Marker>
+                  </Polygon>
+                ))}
+                {floodReferencePoints.map((point) => (
+                  <CircleMarker
+                    key={point.id}
+                    center={[point.latitude, point.longitude]}
+                    radius={6}
+                    pathOptions={{ color: "#38bdf8", fillColor: "#0ea5e9", fillOpacity: 0.85, weight: 2 }}
+                  >
+                    <Popup>
+                      <div className="text-xs text-slate-900">
+                        <h4 className="font-bold text-sky-700">{point.name}</h4>
+                        <p>{point.region} | {point.event_date || "Reference point; no event date asserted"}</p>
+                        <p className="mt-1 text-[10px]">{point.data_status}</p>
+                        <a className="text-[10px] text-blue-600 underline" href={point.source_url} target="_blank" rel="noreferrer">
+                          Source: {point.source_name}
+                        </a>
+                      </div>
+                    </Popup>
+                  </CircleMarker>
+                ))}
               </MapContainer>
             </div>
           </div>
@@ -842,10 +900,10 @@ export default function DrishtiDashboard() {
                 <span className="text-xs text-slate-400 block">Recommended Safe Site:</span>
                 <div className="flex items-center justify-between mt-1">
                   <span className="text-sm font-bold text-emerald-400">
-                    {decisionData?.relocation?.recommended_site === "S001" ? "Dhak Plateau Safe Terrace (S001)" : "Pipalkoti Upper Tableland (S002)"}
+                    {siteName}
                   </span>
                   <span className="text-xs px-2 py-0.5 bg-emerald-500/20 text-emerald-300 font-semibold rounded">
-                    Suitability: {decisionData?.relocation?.suitability_score || 84.5}%
+                    Suitability: {decisionData?.relocation?.suitability_score ?? recommendedSite?.suitability_score ?? "--"}%
                   </span>
                 </div>
               </div>
@@ -854,22 +912,22 @@ export default function DrishtiDashboard() {
               <div className="p-3 bg-slate-850 rounded-lg border border-slate-800">
                 <div className="flex items-center justify-between text-xs text-slate-400">
                   <span>{t.carryingCapacity}:</span>
-                  <span className="text-emerald-400 font-bold flex items-center space-x-1">
-                    <CheckCircle className="w-3.5 h-3.5 inline" />
-                    <span>CAPACITY SUFFICIENT</span>
+                  <span className={`font-bold flex items-center space-x-1 ${capacitySufficient === false ? "text-red-400" : "text-emerald-400"}`}>
+                    {capacitySufficient === false ? <XCircle className="w-3.5 h-3.5 inline" /> : <CheckCircle className="w-3.5 h-3.5 inline" />}
+                    <span>{capacitySufficient === false ? "CAPACITY DEFICIT" : "CAPACITY SUFFICIENT"}</span>
                   </span>
                 </div>
                 <div className="mt-2 grid grid-cols-2 gap-2 text-xs">
                   <div className="bg-slate-800/70 p-2 rounded">
                     <span className="text-slate-400 text-[10px] block">Population to Relocate</span>
                     <span className="font-mono font-bold text-white text-sm">
-                      {activeHab.population || 1250} persons
+                      {populationToRelocate.toLocaleString()} persons
                     </span>
                   </div>
                   <div className="bg-slate-800/70 p-2 rounded">
                     <span className="text-slate-400 text-[10px] block">Site Capacity (at 90% safety)</span>
                     <span className="font-mono font-bold text-emerald-300 text-sm">
-                      {decisionData?.relocation?.capacity || 1800} (Usable: 1,620)
+                      {siteCapacity ? `${siteCapacity.toLocaleString()} (Usable: ${usableCapacity.toLocaleString()})` : "--"}
                     </span>
                   </div>
                 </div>
@@ -882,15 +940,15 @@ export default function DrishtiDashboard() {
               <div className="grid grid-cols-2 gap-3 text-xs">
                 <div className="p-2.5 bg-slate-850 rounded-lg border border-slate-800">
                   <span className="text-[10px] text-slate-400 block">Land-Use Conflict:</span>
-                  <span className="font-bold text-emerald-400 flex items-center space-x-1 mt-0.5">
-                    <CheckCircle className="w-3.5 h-3.5" />
-                    <span>None Detected</span>
+                  <span className={`font-bold flex items-center space-x-1 mt-0.5 ${hasLandUseConflict ? "text-red-400" : "text-emerald-400"}`}>
+                    {hasLandUseConflict ? <XCircle className="w-3.5 h-3.5" /> : <CheckCircle className="w-3.5 h-3.5" />}
+                    <span>{hasLandUseConflict ? "Conflict Detected" : "None Detected"}</span>
                   </span>
                 </div>
                 <div className="p-2.5 bg-slate-850 rounded-lg border border-slate-800">
                   <span className="text-[10px] text-slate-400 block">Estimated Cost (Norm):</span>
                   <span className="font-mono font-bold text-indigo-300 mt-0.5 block">
-                    ₹6,25,00,000 (₹6.25 Cr)
+                    {estimatedCost ? `₹${estimatedCost.toLocaleString("en-IN")}` : "--"}
                   </span>
                 </div>
               </div>

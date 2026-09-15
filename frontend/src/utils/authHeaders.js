@@ -43,7 +43,9 @@ const createLocalDevToken = (role = 'admin') => {
 
 export const getAuthHeadersForApi = (apiUrl, role = 'admin') => {
   const existingToken = localStorage.getItem('auth_token') || '';
-  if (existingToken) {
+  const expiry = Number(localStorage.getItem('auth_token_expiry') || 0);
+  const tokenIsFresh = !expiry || expiry > Date.now();
+  if (existingToken && tokenIsFresh) {
     return { Authorization: `Bearer ${existingToken}` };
   }
 
