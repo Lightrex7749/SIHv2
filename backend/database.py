@@ -4,6 +4,7 @@ PostgreSQL Database Configuration and Models
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from sqlalchemy.orm import declarative_base, Mapped, mapped_column
 from sqlalchemy import String, DateTime, JSON, Boolean, Integer, Float, Text, ForeignKey, TypeDecorator, UniqueConstraint
+from sqlalchemy.engine import make_url
 from datetime import datetime, timezone
 from typing import Optional, Dict, Any
 import os
@@ -13,6 +14,23 @@ load_dotenv()
 
 # Get database URL from environment
 DATABASE_URL = os.getenv('DATABASE_URL') or os.getenv('POSTGRES_URL')
+
+# Supabase direct database hosts are IPv6-only on some networks. Use the
+# project's IPv4 session pooler while preserving the local password.
+if DATABASE_URL and '.supabase.co' in DATABASE_URL and 'pooler.supabase.com' not in DATABASE_URL:
+    database_url = make_url(DATABASE_URL)
+    if database_url.host and database_url.host.startswith('db.'):
+        project_ref = database_url.host.split('.')[1]
+        pooler_host = os.getenv(
+            'SUPABASE_POOLER_HOST',
+            'aws-1-ap-southeast-1.pooler.supabase.com'
+        )
+        DATABASE_URL = database_url.set(
+            username=f'postgres.{project_ref}',
+            host=pooler_host,
+            port=5432,
+        ).render_as_string(hide_password=False)
+        print(f"[DB] Using Supabase IPv4 pooler: {pooler_host}")
 
 # Auto-detect database type and configure appropriately
 if DATABASE_URL:
