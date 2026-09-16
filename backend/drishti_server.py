@@ -17,7 +17,7 @@ if str(ROOT_DIR) not in sys.path:
 if str(BACKEND_DIR) not in sys.path:
     sys.path.insert(0, str(BACKEND_DIR))
 
-from fastapi import FastAPI, HTTPException, Depends, status
+from fastapi import FastAPI, HTTPException, Depends, WebSocket, WebSocketDisconnect, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from typing import Dict, Any, List, Optional
@@ -63,6 +63,7 @@ from backend.routes.risk import risk_router
 from backend.routes.scientist import scientist_router
 from backend.routes.telegram import telegram_router
 from backend.routes.weather import weather_router
+from backend.notifications import ws_manager
 
 # Create FastAPI App
 app = FastAPI(
@@ -79,6 +80,20 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.websocket("/api/ws/{client_id}")
+async def realtime_alerts_websocket(websocket: WebSocket, client_id: str):
+    await ws_manager.connect(websocket, client_id)
+    try:
+        while True:
+            message = await websocket.receive_json()
+            if message.get("type") == "subscribe_user":
+                ws_manager.subscribe_user(client_id, message.get("user_id", ""))
+            elif message.get("type") == "location_update":
+                ws_manager.set_client_location(client_id, message.get("location", {}))
+    except WebSocketDisconnect:
+        ws_manager.disconnect(client_id)
 
 # Mount Computer Vision router (POST /api/v1/vision/analyze)
 app.include_router(vision_router)
