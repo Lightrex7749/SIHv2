@@ -50,8 +50,8 @@ if DATABASE_URL:
             DATABASE_URL,
             echo=False,
             pool_pre_ping=True,
-            pool_size=10,
-            max_overflow=20,
+            pool_size=3,
+            max_overflow=0,
             connect_args={
                 "ssl": "require",  # Render PostgreSQL requires SSL
                 "server_settings": {"application_name": "suraksha_setu_backend"}
@@ -64,8 +64,8 @@ if DATABASE_URL:
             DATABASE_URL,
             echo=False,
             pool_pre_ping=True,
-            pool_size=10,
-            max_overflow=20,
+            pool_size=3,
+            max_overflow=0,
             connect_args={
                 "ssl": "require",
                 "server_settings": {"application_name": "suraksha_setu_backend"}
