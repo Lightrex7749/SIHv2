@@ -16,6 +16,9 @@ Per **API Contract (v2)** and **Member 2 Brief (v2)**, single-image classificati
    - Non-fabricated, calibrated confidence values based on measured ground pixel alteration ratios.
 3. **Unified Service (`VisionService`) & FastAPI Router**:
    - Plugs directly into Member 6's central integration backend with one import (`vision_router`).
+4. **Optional teammate-trained classifier (`TrainedDisasterClassifier`)**:
+  - Uses the packaged EfficientNet-B0 checkpoint for six-class local image classification.
+  - Enable with `DRISHTISETU_CV_MODE=trained`; the default mock and change-detection modes remain unchanged.
 
 ---
 
@@ -131,3 +134,5 @@ Execute the test suite with `pytest`:
 ```bash
 python -m pytest computer_vision/tests/ -v
 ```
+
+The trained classifier requires `torch` and `torchvision` from the project requirements. Set `DRISHTISETU_CLASSIFIER_MODEL` to override the packaged checkpoint path when deploying the model separately.

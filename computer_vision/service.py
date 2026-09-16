@@ -9,6 +9,7 @@ from typing import Optional, Dict, Any, List
 from .schemas import VisionAnalyzeRequest, VisionAnalyzeResponse
 from .detection.base import BaseVisionDetector
 from .detection.mock_detector import MockVisionDetector
+from .detection.trained_classifier import TrainedDisasterClassifier
 from .change_detection.spectral_differencing import SatelliteChangeDetector
 
 logger = logging.getLogger("drishtisetu.cv.service")
@@ -23,10 +24,11 @@ class VisionService:
 
     def __init__(self, mode: str = "mock"):
         """
-        mode: 'mock', 'change_detection', or 'auto'
+        mode: 'mock', 'trained', 'change_detection', or 'auto'
         """
         self.mode = os.getenv("DRISHTISETU_CV_MODE", mode).lower()
         self.mock_detector = MockVisionDetector()
+        self.trained_classifier = TrainedDisasterClassifier()
         self.change_detector = SatelliteChangeDetector()
         logger.info(f"Initialized DrishtiSetu VisionService in mode: {self.mode}")
 
@@ -38,6 +40,8 @@ class VisionService:
         try:
             if self.mode == "change_detection" or (self.mode == "auto" and request.pre_image_url):
                 return self.change_detector.analyze(request)
+            if self.mode == "trained":
+                return self.trained_classifier.analyze(request)
             else:
                 return self.mock_detector.analyze(request)
         except Exception as e:

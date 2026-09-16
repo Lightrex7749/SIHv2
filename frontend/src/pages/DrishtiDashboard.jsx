@@ -978,7 +978,9 @@ export default function DrishtiDashboard() {
                 <Camera className="w-4 h-4 text-indigo-400" />
                 <span>{t.cvAnalysis}</span>
               </div>
-              <span className="text-[10px] text-slate-400 font-mono">Bhuvan / Sentinel-2</span>
+              <span className="text-[10px] text-slate-400 font-mono">
+                {visionData?.model_disclosure?.startsWith("EfficientNet") ? "Team EfficientNet-B0" : "Bhuvan / Sentinel-2"}
+              </span>
             </div>
 
             <div className="mt-3 flex items-center space-x-3">
@@ -991,15 +993,25 @@ export default function DrishtiDashboard() {
                 <span className="absolute bottom-1 right-1 text-[9px] bg-black/80 px-1 rounded text-white font-mono">Post</span>
               </div>
               <div className="flex-1 text-xs space-y-1">
+                {(() => {
+                  const detection = visionData?.detections?.[0];
+                  const hazard = detection?.hazard_type || "LANDSLIDE";
+                  const severity = detection?.severity || "HIGH";
+                  const confidence = detection?.confidence != null ? `${(detection.confidence * 100).toFixed(1)}%` : "87.0%";
+                  return (
+                    <>
                 <div className="flex items-center space-x-2">
                   <span className="font-semibold text-white">Detection:</span>
                   <span className="px-2 py-0.5 bg-red-500/20 text-red-300 font-bold rounded text-[10px]">
-                    LANDSLIDE — HIGH SEVERITY
+                    {hazard} - {severity} SEVERITY
                   </span>
                 </div>
                 <div className="text-[11px] text-slate-400">
-                  Confidence: <span className="text-white font-mono font-bold">87.0%</span> (Calibrated delta)
+                  Confidence: <span className="text-white font-mono font-bold">{confidence}</span> ({visionData?.model_disclosure?.startsWith("EfficientNet") ? "Team EfficientNet-B0 classifier" : "Calibrated delta"})
                 </div>
+                    </>
+                  );
+                })()}
                 {/* Mandatory Model Disclosure Banner */}
                 <div className="p-1.5 bg-slate-800/80 rounded border border-slate-700 text-[10px] text-slate-400 leading-tight">
                   <span className="text-indigo-400 font-semibold">{t.modelDisclosure}: </span>

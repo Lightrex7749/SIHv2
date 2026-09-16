@@ -90,5 +90,7 @@ fastapi-limiter==0.1.6
 chromadb==0.4.22
 pydub==0.25.1
 pillow>=11.0.0
+torch>=2.2.0,<3.0.0
+torchvision>=0.17.0,<1.0.0
 twilio>=8.0.0
 boto3>=1.34.0
