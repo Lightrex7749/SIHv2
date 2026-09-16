@@ -12,6 +12,8 @@ import {
   Layers,
   FileText,
   Camera,
+  Upload,
+  Loader2,
   Cpu,
   HelpCircle,
   RefreshCw,
@@ -170,6 +172,9 @@ export default function DrishtiDashboard() {
   const [explainData, setExplainData] = useState(null);
   const [showExplainModal, setShowExplainModal] = useState(false);
   const [visionData, setVisionData] = useState(null);
+  const [visionImage, setVisionImage] = useState("https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=200&auto=format&fit=crop&q=60");
+  const [visionUploadName, setVisionUploadName] = useState("");
+  const [visionLoading, setVisionLoading] = useState(false);
   const [decisionHistory, setDecisionHistory] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -308,6 +313,32 @@ export default function DrishtiDashboard() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const analyzeUploadedImage = (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = async () => {
+      const imageData = String(reader.result);
+      setVisionImage(imageData);
+      setVisionUploadName(file.name);
+      setVisionLoading(true);
+      try {
+        const response = await axios.post(`${API_BASE}/api/v1/vision/analyze`, {
+          image_url: imageData,
+          latitude: habitationDetails?.latitude || 30.556,
+          longitude: habitationDetails?.longitude || 79.566,
+        });
+        setVisionData(response.data);
+      } catch (error) {
+        console.error("Uploaded image analysis failed:", error);
+      } finally {
+        setVisionLoading(false);
+      }
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleAuthoritySubmit = async (e) => {
@@ -986,8 +1017,8 @@ export default function DrishtiDashboard() {
             <div className="mt-3 flex items-center space-x-3">
               <div className="w-20 h-20 bg-slate-800 rounded-lg overflow-hidden border border-slate-700 flex-shrink-0 relative group">
                 <img
-                  src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=200&auto=format&fit=crop&q=60"
-                  alt="Satellite Patch"
+                  src={visionImage}
+                  alt={visionUploadName || "Satellite patch analyzed by the model"}
                   className="w-full h-full object-cover"
                 />
                 <span className="absolute bottom-1 right-1 text-[9px] bg-black/80 px-1 rounded text-white font-mono">Post</span>
@@ -1016,6 +1047,24 @@ export default function DrishtiDashboard() {
                 <div className="p-1.5 bg-slate-800/80 rounded border border-slate-700 text-[10px] text-slate-400 leading-tight">
                   <span className="text-indigo-400 font-semibold">{t.modelDisclosure}: </span>
                   {visionData?.model_disclosure || "Prototype uses rule-based detector for demo. Production fine-tuned on Sen1Floods11 & Landslide4Sense benchmark datasets."}
+                </div>
+                <div className="flex items-center gap-2 pt-1.5">
+                  <label className="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-md text-[10px] font-semibold cursor-pointer transition">
+                    <Upload className="w-3 h-3" />
+                    <span>Show model prediction</span>
+                    <input
+                      type="file"
+                      accept="image/png,image/jpeg,image/webp"
+                      onChange={analyzeUploadedImage}
+                      className="hidden"
+                    />
+                  </label>
+                  {visionLoading && <Loader2 className="w-3.5 h-3.5 text-indigo-300 animate-spin" />}
+                  {visionUploadName && !visionLoading && (
+                    <span className="text-[10px] text-slate-500 truncate max-w-[150px]" title={visionUploadName}>
+                      {visionUploadName}
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
